@@ -8,11 +8,20 @@ app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
 
-client = MongoClient()
-db = client.cat
+client = MongoClient(host="mongodb+srv://sanjana:1555@cluster0.ib96nov.mongodb.net/animal?retryWrites=true&w=majority")
+db = client.animal
 collection = db.user
 collection1 = db.report
 
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify("Hey there!")
 
 @app.route('/submit', methods=['GET','POST'])
 def submit():
@@ -33,8 +42,7 @@ def submit():
 
     data = {'first-name': firstName, 'last-name': lastName, 'email': email, 'address': address,  'city': city, 'state': state, 'country': country, 'phone-number': phoneNumber, 'animal-preference':animalPreference,  'color': color, 'gender': gender, 'breed': breed, 'follow-up-reports':follow_up_reports, 're-home-pet': re_home_pet }
     collection.insert_one(data)
-
-
+    return jsonify({ "message": "Success" })
 
 @app.route('/submitreport', methods=['GET','POST'])
 def reportSubmit():
