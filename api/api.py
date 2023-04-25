@@ -12,6 +12,8 @@ client = MongoClient(host="mongodb+srv://sanjana:1555@cluster0.ib96nov.mongodb.n
 db = client.animal
 collection = db.user
 collection1 = db.report
+print(collection)
+print(collection1)
 
 try:
     client.admin.command('ping')
@@ -46,6 +48,9 @@ def submit():
 
 @app.route('/submitreport', methods=['GET','POST'])
 def reportSubmit():
+    name = request.form['user']
+    email = request.form['email']
+    phoneNumber=request.form['phone-number']
     location=request.form['address']
     city1=request.form['city']
     state1=request.form['state']
@@ -55,16 +60,17 @@ def reportSubmit():
     moreDetails=request.form['other-questions']
 
             
-    data1= {'address':location, 'city':city1, 'state': state1, 'country': country1, 'animal-preference': animalPreference1, 'danger': danger, 'other-questions': moreDetails}          
+    data1= {'user': name , 'email': email, 'phone-number':phoneNumber, 'address':location, 'city':city1, 'state': state1, 'country': country1, 'animal-preference': animalPreference1, 'danger': danger, 'other-questions': moreDetails}          
     collection1.insert_one(data1)
 
-    results = []
-    for doc in collection.find():
-        doc['_id'] = str(doc['_id'])
-        results.append(doc)
+    # results = []
+    # for doc in collection1.find():
+    #     doc['_id'] = str(doc['_id'])
+    #     results.append(doc)
             
-    # Convert the list of dictionaries to JSON format and return it as a response
-    return jsonify(results)
+    # # Convert the list of dictionaries to JSON format and return it as a response
+    # return jsonify(results)
+    return jsonify({ "message": "Success" })
     #print(data)
 
 # create a HTML form
